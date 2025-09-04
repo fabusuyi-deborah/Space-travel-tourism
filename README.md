@@ -1,69 +1,54 @@
-# React + TypeScript + Vite
+# Space Travel Tourism
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is my solution to the Frontend Mentor Space Tourism Challenge [[Frontend Mentor Space Tourism Challenge](https://www.frontendmentor.io/challenges/space-tourism-multipage-website-gRWj1URZ3)]. The goal was to replicate a space tourism company's multi-page website whilw following the design.
 
-Currently, two official plugins are available:
+## About the Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was an opportunity to practice building a real-world style multi-page website with reusable components. Instead of a single landing page, it required handling multiple layouts and states:
 
-## Expanding the ESLint configuration
+- Home – Hero introduction
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Destination – Planet info with tabbed navigation
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Crew – Crew profiles with navigation dots
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Technology – Vehicle/tech details with numbered tabs
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Technologies Used
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- React
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- TypeScript
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Tailwind Css
+
+- React Router
+
+## My Focus
+
+While building, I focused on:
+
+- Responsiveness – Ensuring smooth layouts across mobile, tablet, and desktop breakpoints
+
+- Type safety – Leveraging TypeScript to define props and avoid runtime errors
+
+- Component reusability – Breaking down UI into smaller pieces (tabs, navigation, content cards)
+
+## Getting Started
+
+1. Clone the repository:
+  ```bash
+  git clone [text](https://github.com/fabusuyi-deborah/Space-travel-tourism)
+  ```
+2. Install dependencies:
+  ```bash
+  npm install
+  ```
+3. Start the development server:
+  ```bash
+  npm start
+  ```
+
+## License
+
+[MIT](LICENSE)
