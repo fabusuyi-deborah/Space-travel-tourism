@@ -48,13 +48,13 @@ const Destination = () => {
   const destination = destinations[active];
 
   return (
-    <div className="min-h-screen text-white px-8 lg:px-24  bg-no-repeat bg-cover bg-center
+    <div className=" text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover 
       bg-[url('/images/destination/background-destination-mobile.jpg')]
-      sm:bg-[url('/images/destination/background-destination-tablet.jpg')]
+      sm:bg-[url('/images/destination/background-destination-mobile.jpg')]
       lg:bg-[url('/images/destination/background-destination-desktop.jpg')]">
       {/* Title */}
       <h1 className="text-xl tracking-widest uppercase text-center lg:text-left">
-        <span className="opacity-50 font-bold  mt-4  font-[Barlow_Condensed]">01</span> Pick your destination
+        <span className="opacity-50 font-bold  mt-8  font-[Barlow_Condensed]">01</span> Pick your destination
       </h1>
 
       {/* Main content */}
