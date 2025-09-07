@@ -48,7 +48,7 @@ const Destination = () => {
   const destination = destinations[active];
 
   return (
-    <div className="min-h-screen text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover bg-center
+    <div className="min-h-screen text-white px-8 lg:px-24  bg-no-repeat bg-cover bg-center
       bg-[url('/images/destination/background-destination-mobile.jpg')]
       sm:bg-[url('/images/destination/background-destination-tablet.jpg')]
       lg:bg-[url('/images/destination/background-destination-desktop.jpg')]">
