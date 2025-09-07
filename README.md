@@ -38,7 +38,7 @@ While building, I focused on:
 
 1. Clone the repository:
   ```bash
-  git clone [text](https://github.com/fabusuyi-deborah/Space-travel-tourism)
+  git clone https://github.com/fabusuyi-deborah/Space-travel-tourism
   ```
 2. Install dependencies:
   ```bash

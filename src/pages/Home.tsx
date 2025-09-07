@@ -16,7 +16,6 @@ const Home = () => {
           sm:px-6 sm:pt-24 sm:pb-12 sm:gap-12
           md:gap-16 md:pt-32
           lg:pt-40 lg:pb-20 lg:flex-row lg:items-end lg:justify-between lg:text-left lg:gap-0 lg:px-8
-          xl:pt-48 xl:pb-24 xl:px-12
         "
       >
         {/* Left Section (Text) */}
