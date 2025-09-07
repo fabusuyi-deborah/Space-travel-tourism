@@ -51,16 +51,41 @@ const Destination = () => {
 
   return (
     <div
-      className="h-screen text-white px-6 lg:px-24 py-8 lg:py-20 bg-no-repeat bg-cover bg-center bg-fixed
+      className="min-h-screen text-white px-6 lg:px-24 py-8 lg:py-20 bg-no-repeat bg-cover bg-center bg-fixed
       bg-[url('/images/destination/background-destination-mobile.jpg')]
       md:bg-[url('/images/destination/background-destination-tablet.jpg')]
       lg:bg-[url('/images/destination/background-destination-desktop.jpg')]
       overflow-y-auto"
     >
       {/* Title */}
-      <h1 className="text-lg lg:text-xl tracking-widest uppercase text-center lg:text-left mt-4 lg:mt-8">
+      <h1 className="text-lg lg:text-xl tracking-widest uppercase text-center lg:text-left mt-10 lg:mt-12">
         <span className="opacity-50 font-bold font-[Barlow_Condensed]">01</span> Pick your destination
       </h1>
+
+            <div
+        className="
+          flex flex-col items-center justify-center
+          min-h-screen px-4 pt-20 pb-8 text-center
+          gap-8
+          sm:px-6 sm:pt-24 sm:pb-12 sm:gap-12
+          md:gap-16 md:pt-32
+          lg:pt-40 lg:pb-20 lg:flex-row lg:items-end lg:justify-between lg:text-left lg:gap-0 lg:px-8
+        "
+      >
+        {/* Destination Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          {(Object.keys(destinations) as Array<keyof typeof destinations>).map((key) => (
+            <button
+              key={key}
+              onClick={() => setActive(key)}
+              className={`pb-2 border-b-2 ${
+                active === key ? "border-white" : "border-transparent"
+              } hover:border-gray-500 transition-colors`}
+            >
+              {destinations[key].name}
+            </button>
+          ))}
+        </div>
 
       {/* Main content */}
       <div className="mt-8 lg:mt-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-16 pb-8">
@@ -114,7 +139,8 @@ const Destination = () => {
               <p className="text-xl lg:text-2xl font-[Bellefair] mt-1">{destination.travelTime}</p>
             </div>
           </div>
-        </div>
+          </div>
+          </div>
       </div>
     </div>
   )
