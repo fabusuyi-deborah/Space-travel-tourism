@@ -11,41 +11,28 @@ const Home = () => {
       <div
         className="
           flex flex-col items-center justify-center
-          min-h-screen px-4 pt-20 pb-8 text-center
-          gap-8
-          sm:px-6 sm:pt-24 sm:pb-12 sm:gap-12
-          md:gap-16 md:pt-32
-          lg:pt-40 lg:pb-20 lg:flex-row lg:items-end lg:justify-between lg:text-left lg:gap-0 lg:px-8
+          h-screen px-4 py-6 text-center
+          gap-8 md:gap-16 md:pt-32
+          lg:flex-row lg:items-end lg:justify-between lg:text-left lg:gap-0 lg:px-8
         "
       >
         {/* Left Section (Text) */}
-        <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+        <div className="md:max-w-lg lg:max-w-xl xl:max-w-2xl">
           <h2
             className="uppercase text-md text-[#D0D6F9] mb-3
-                         md:text-lg md:mb-5
-                         lg:text-xl lg:mb-6
                          font-[Barlow_Condensed]"
           >
             So, you want to travel to
           </h2>
           <h1
             className="uppercase text-6xl mb-4
-                         sm:text-7xl sm:mb-5
-                         md:text-8xl md:mb-6
-                         lg:text-[8rem] lg:mb-7
-                         xl:text-[10rem] xl:mb-8
-                         leading-none
                          text-white
                          font-[Bellefair]"
           >
             Space
           </h1>
           <p
-            className=" text-[#D0D6F9] leading-relaxed text-sm
-                        sm:text-base sm:leading-7
-                        md:text-lg md:leading-8
-                        lg:leading-8
-                        xl:leading-9
+            className=" text-[#D0D6F9] leading text-sm
                         text-balance
                         font-[Barlow]"
           >
