@@ -1,12 +1,14 @@
-import { useState } from "react";
+"use client"
+
+import { useState } from "react"
 
 type Destination = {
-  name: string;
-  description: string;
-  distance: string;
-  travelTime: string;
-  image: string;
-};
+  name: string
+  description: string
+  distance: string
+  travelTime: string
+  image: string
+}
 
 const destinations: Record<string, Destination> = {
   moon: {
@@ -41,28 +43,31 @@ const destinations: Record<string, Destination> = {
     travelTime: "7 YEARS",
     image: "/images/destination/image-titan.png",
   },
-};
+}
 
 const Destination = () => {
-  const [active, setActive] = useState<keyof typeof destinations>("moon");
-  const destination = destinations[active];
+  const [active, setActive] = useState<keyof typeof destinations>("moon")
+  const destination = destinations[active]
 
   return (
-    <div className="min-h-screen text-white px-6 lg:px-24 py-8 lg:py-20 bg-no-repeat bg-cover bg-center
+    <div
+      className="h-screen text-white px-6 lg:px-24 py-8 lg:py-20 bg-no-repeat bg-cover bg-center bg-fixed
       bg-[url('/images/destination/background-destination-mobile.jpg')]
       md:bg-[url('/images/destination/background-destination-tablet.jpg')]
-      lg:bg-[url('/images/destination/background-destination-desktop.jpg')]">
+      lg:bg-[url('/images/destination/background-destination-desktop.jpg')]
+      overflow-y-auto"
+    >
       {/* Title */}
       <h1 className="text-lg lg:text-xl tracking-widest uppercase text-center lg:text-left mt-4 lg:mt-8">
         <span className="opacity-50 font-bold font-[Barlow_Condensed]">01</span> Pick your destination
       </h1>
 
       {/* Main content */}
-      <div className="mt-8 lg:mt-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-16">
+      <div className="mt-8 lg:mt-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-16 pb-8">
         {/* Left side - Image */}
         <div className="flex justify-center lg:flex-1">
           <img
-            src={destination.image}
+            src={destination.image || "/placeholder.svg"}
             alt={destination.name}
             className="w-48 h-48 sm:w-64 sm:h-64 lg:w-[445px] lg:h-[445px] object-contain"
           />
@@ -72,24 +77,24 @@ const Destination = () => {
         <div className="flex flex-col items-center lg:items-start lg:flex-1 text-center lg:text-left">
           {/* Tabs */}
           <div className="flex gap-4 lg:gap-6 text-sm lg:text-lg uppercase tracking-wide font-[Barlow_Condensed] text-[#D0D6F9]">
-            {(Object.keys(destinations) as Array<keyof typeof destinations>).map(
-              (key) => (
-                <button
-                  key={key}
-                  onClick={() => setActive(key)}
-                  className={`pb-2 border-b-2 ${
-                    active === key ? "border-white" : "border-transparent"
-                  } hover:border-gray-500 transition-colors`}
-                >
-                  {destinations[key].name}
-                </button>
-              )
-            )}
+            {(Object.keys(destinations) as Array<keyof typeof destinations>).map((key) => (
+              <button
+                key={key}
+                onClick={() => setActive(key)}
+                className={`pb-2 border-b-2 ${
+                  active === key ? "border-white" : "border-transparent"
+                } hover:border-gray-500 transition-colors`}
+              >
+                {destinations[key].name}
+              </button>
+            ))}
           </div>
 
           {/* Content */}
           <h2 className="text-5xl sm:text-6xl lg:text-6xl mt-4 lg:mt-6 font-[Bellefair]">{destination.name}</h2>
-          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-3 lg:mt-4 text-sm lg:text-base px-2 lg:px-0 leading-relaxed">{destination.description}</p>
+          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-3 lg:mt-4 text-sm lg:text-base px-2 lg:px-0 leading-relaxed">
+            {destination.description}
+          </p>
 
           {/* Divider */}
           <hr className="w-full max-w-lg border-gray-700 my-4 lg:my-8" />
@@ -112,7 +117,7 @@ const Destination = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Destination;
+export default Destination
