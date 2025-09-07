@@ -88,11 +88,11 @@ const Destination = () => {
           </div>
 
           {/* Content */}
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl mt-6 font-[Bellefair]">{destination.name}</h2>
-          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-4 text-sm lg:text-base px-4 lg:px-0">{destination.description}</p>
+          <h2 className="text-5xl sm:text-6xl lg:text-6xl mt-4 lg:mt-6 font-[Bellefair]">{destination.name}</h2>
+          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-3 lg:mt-4 text-sm lg:text-base px-2 lg:px-0 leading-relaxed">{destination.description}</p>
 
           {/* Divider */}
-          <hr className="w-full max-w-lg border-gray-700 my-6 lg:my-8" />
+          <hr className="w-full max-w-lg border-gray-700 my-4 lg:my-8" />
 
           {/* Stats */}
           <div className="flex flex-col sm:flex-row gap-6 lg:gap-16 w-full max-w-lg justify-center lg:justify-start">
