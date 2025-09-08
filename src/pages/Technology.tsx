@@ -110,7 +110,7 @@ const Technology = () => {
 
           {/* Right Content - Image */}
           <div className="flex-1 lg:max-w-lg xl:max-w-xl order-1 lg:order-2 w-full">
-            <div className="relative w-full h-64 lg:h-96 xl:h-[500px] rounded-lg overflow-hidden">
+            <div className="relative w-full h-64 lg:h-96 xl:h-[500px] overflow-hidden">
               <img
                 src={currentTech.imageLandscape}
                 alt={currentTech.name}
