@@ -12,7 +12,7 @@ This project was an opportunity to practice building a real-world style multi-pa
 
 - Crew – Crew profiles with navigation dots
 
-- Technology – Vehicle/tech details with numbered tabs
+- Technology – Tech details with numbered tabs
 
 ## Technologies Used
 
