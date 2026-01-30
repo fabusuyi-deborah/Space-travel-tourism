@@ -49,7 +49,7 @@ const Destination = () => {
 
   return (
     <div
-      className="min-h-screen h-full text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover bg-center
+      className="min-h-dvh text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover bg-center
       bg-[url('/images/destination/background-destination-mobile.jpg')]
       sm:bg-[url('/images/destination/background-destination-tablet.jpg')]
       lg:bg-[url('/images/destination/background-destination-desktop.jpg')]"

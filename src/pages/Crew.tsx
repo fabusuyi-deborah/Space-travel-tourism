@@ -42,7 +42,7 @@ const Crew = () => {
 
   return (
     <div
-      className="min-h-screen h-full text-white px-6 lg:px-24 py-20 flex flex-col bg-cover bg-center bg-no-repeat
+      className="min-h-dvh text-white px-6 lg:px-24 py-20 flex flex-col bg-cover bg-center bg-no-repeat
       bg-[url('/images/crew/background-crew-desktop.jpg')]
       sm:bg-[url('/images/crew/background-crew-tablet.jpg')]
       lg:bg-[url('/images/crew/background-crew-desktop.jpg')]"

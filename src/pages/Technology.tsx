@@ -43,14 +43,14 @@ const Technology = () => {
 
   return (
     <div
-      className="min-h-screen h-full bg-cover bg-center bg-no-repeat
+      className="min-h-dvh bg-cover bg-center bg-no-repeat
       bg-[url('/images/technology/background-technology-mobile.jpg')]
       sm:bg-[url('/images/technology/background-technology-tablet.jpg')]
       lg:bg-[url('/images/technology/background-technology-desktop.jpg')] text-white"
     >
       {/* Background with overlay */}
 
-      <div className="relative z-10 px-6 lg:px-24 py-12 lg:py-20 h-full flex flex-col">
+      <div className="relative z-10 px-6 lg:px-24 py-12 lg:py-20 min-h-dvh flex flex-col">
         {/* Title */}
         <h1 className="text-lg lg:text-xl tracking-[0.2em] uppercase text-center lg:text-left mb-12 lg:mb-20 font-light">
           <span className="opacity-50 font-bold mr-6 text-2xl">04</span>
