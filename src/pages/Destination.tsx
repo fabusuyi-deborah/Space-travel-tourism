@@ -48,13 +48,18 @@ const Destination = () => {
   const destination = destinations[active];
 
   return (
-    <div className="min-h-screen text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover bg-center
+    <div
+      className="min-h-screen h-full text-white px-8 lg:px-24 py-20 bg-no-repeat bg-cover bg-center
       bg-[url('/images/destination/background-destination-mobile.jpg')]
       sm:bg-[url('/images/destination/background-destination-tablet.jpg')]
-      lg:bg-[url('/images/destination/background-destination-desktop.jpg')]">
+      lg:bg-[url('/images/destination/background-destination-desktop.jpg')]"
+    >
       {/* Title */}
       <h1 className="text-xl tracking-widest uppercase text-center lg:text-left">
-        <span className="opacity-50 font-bold  mt-4  font-[Barlow_Condensed]">01</span> Pick your destination
+        <span className="opacity-50 font-bold  mt-4  font-[Barlow_Condensed]">
+          02
+        </span>{" "}
+        Pick your destination
       </h1>
 
       {/* Main content */}
@@ -72,24 +77,26 @@ const Destination = () => {
         <div className="flex flex-col items-center lg:items-start lg:flex-1 text-center lg:text-left">
           {/* Tabs */}
           <div className="flex gap-6 text-lg uppercase tracking-wide font-[Barlow_Condensed] text-[#D0D6F9]">
-            {(Object.keys(destinations) as Array<keyof typeof destinations>).map(
-              (key) => (
-                <button
-                  key={key}
-                  onClick={() => setActive(key)}
-                  className={`pb-2 border-b-2 ${
-                    active === key ? "border-white" : "border-transparent"
-                  } hover:border-gray-500`}
-                >
-                  {destinations[key].name}
-                </button>
-              )
-            )}
+            {(
+              Object.keys(destinations) as Array<keyof typeof destinations>
+            ).map((key) => (
+              <button
+                key={key}
+                onClick={() => setActive(key)}
+                className={`pb-2 border-b-2 ${
+                  active === key ? "border-white" : "border-transparent"
+                } hover:border-gray-500`}
+              >
+                {destinations[key].name}
+              </button>
+            ))}
           </div>
 
           {/* Content */}
           <h2 className="text-6xl mt-6 font-[Bellefair]">{destination.name}</h2>
-          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-4">{destination.description}</p>
+          <p className="max-w-lg font-[Barlow] text-[#D0D6F9] mt-4">
+            {destination.description}
+          </p>
 
           {/* Divider */}
           <hr className="w-full border-gray-700 my-8" />
@@ -100,13 +107,17 @@ const Destination = () => {
               <p className="text-sm uppercase tracking-widest font-[Barlow_Condensed] text-[#D0D6F9]">
                 Avg. Distance
               </p>
-              <p className="text-2xl font-[Bellefair]">{destination.distance}</p>
+              <p className="text-2xl font-[Bellefair]">
+                {destination.distance}
+              </p>
             </div>
             <div>
               <p className="text-sm uppercase tracking-widest font-[Barlow_Condensed] text-[#D0D6F9]">
                 Est. Travel Time
               </p>
-              <p className="text-2xl font-[Bellefair]">{destination.travelTime}</p>
+              <p className="text-2xl font-[Bellefair]">
+                {destination.travelTime}
+              </p>
             </div>
           </div>
         </div>

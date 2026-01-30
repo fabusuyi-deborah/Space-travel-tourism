@@ -19,7 +19,7 @@ const technologies: Record<string, Technology> = {
   },
   spaceport: {
     terminology: "THE TERMINOLOGY...",
-    name: "SPACEPORT", 
+    name: "SPACEPORT",
     description:
       "A spaceport or cosmodrome is a site for launching (or receiving) spacecraft, by analogy to the seaport for ships or airport for aircraft. Based in the famous Cape Canaveral, our spaceport is ideally situated to take advantage of the Earth's rotation for launch.",
     imagePortrait: "/images/technology/image-spaceport-portrait.jpg",
@@ -36,26 +36,29 @@ const technologies: Record<string, Technology> = {
 };
 
 const Technology = () => {
-  const [selectedTechnology, setSelectedTechnology] = useState<string>("spaceport");
+  const [selectedTechnology, setSelectedTechnology] =
+    useState<string>("spaceport");
   const techKeys = Object.keys(technologies);
   const currentTech = technologies[selectedTechnology];
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat
+    <div
+      className="min-h-screen h-full bg-cover bg-center bg-no-repeat
       bg-[url('/images/technology/background-technology-mobile.jpg')]
       sm:bg-[url('/images/technology/background-technology-tablet.jpg')]
-      lg:bg-[url('/images/technology/background-technology-desktop.jpg')] text-white">
+      lg:bg-[url('/images/technology/background-technology-desktop.jpg')] text-white"
+    >
       {/* Background with overlay */}
-      
-      <div className="relative z-10 px-6 lg:px-24 py-12 lg:py-20">
+
+      <div className="relative z-10 px-6 lg:px-24 py-12 lg:py-20 h-full flex flex-col">
         {/* Title */}
         <h1 className="text-lg lg:text-xl tracking-[0.2em] uppercase text-center lg:text-left mb-12 lg:mb-20 font-light">
-          <span className="opacity-50 font-bold mr-6 text-2xl">03</span> 
+          <span className="opacity-50 font-bold mr-6 text-2xl">04</span>
           <span className="font-light">Space launch 101</span>
         </h1>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20 flex-1">
           {/* Left Content - Text and Navigation */}
           <div className="flex-1 lg:max-w-xl order-2 lg:order-1">
             {/* Mobile/Tablet Navigation - Horizontal dots */}

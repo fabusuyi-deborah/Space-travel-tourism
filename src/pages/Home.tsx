@@ -1,9 +1,20 @@
 const Home = () => {
+  const scrollToDestination = () => {
+    const element = document.getElementById("destination");
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
+  };
+
   return (
     <div
       className="
-        min-h-screen bg-no-repeat bg-cover bg-center
-        bg-[url('/images/background-home-mobile.jpg')]
+        min-h-screen h-full bg-no-repeat bg-cover bg-center
+        bg-[url('/images/background-home-tablet.jpg')]
         sm:bg-[url('/images/background-home-tablet.jpg')]
         lg:bg-[url('/images/background-home-desktop.jpg')]
       "
@@ -49,17 +60,20 @@ const Home = () => {
                         text-balance
                         font-[Barlow]"
           >
-            Let's face it; if you want to go to space, you might as well genuinely go to outer space and not hover kind
-            of on the edge of it. Well sit back, and relax because we'll give you a truly out of this world experience!
+            Let's face it; if you want to go to space, you might as well
+            genuinely go to outer space and not hover kind of on the edge of it.
+            Well sit back, and relax because we'll give you a truly out of this
+            world experience!
           </p>
         </div>
 
         {/* Right Section (Explore Button) */}
         <div className="flex items-center justify-center lg:flex-shrink-0">
           <button
+            onClick={scrollToDestination}
             className="
-              w-32 h-32 rounded-full bg-white text-black uppercase 
-              text-lg font-light flex items-center justify-center 
+              w-32 h-32 rounded-full bg-white text-black uppercase
+              text-lg font-light flex items-center justify-center
               font-[Bellefair]
               transition-all duration-500 ease-out
               hover:scale-105 hover:shadow-[0_0_0_20px_rgba(255,255,255,0.1)]
@@ -76,7 +90,7 @@ const Home = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

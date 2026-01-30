@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 type CrewMember = {
-  role: string
-  name: string
-  bio: string
-  image: string
-}
+  role: string;
+  name: string;
+  bio: string;
+  image: string;
+};
 
 const crew: CrewMember[] = [
   {
@@ -34,22 +34,22 @@ const crew: CrewMember[] = [
     bio: "Anousheh Ansari is an Iranian American engineer and co-founder of Prodea Systems. Ansari was the fourth self-funded space tourist, the first self-funded woman to fly to the ISS, and the first Iranian in space.",
     image: "/images/crew/image-anousheh-ansari.png",
   },
-]
+];
 
 const Crew = () => {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const member = crew[activeIndex]
+  const [activeIndex, setActiveIndex] = useState(0);
+  const member = crew[activeIndex];
 
   return (
     <div
-      className="min-h-screen text-white px-6 lg:px-24 py-20 flex flex-col bg-cover bg-center bg-no-repeat
+      className="min-h-screen h-full text-white px-6 lg:px-24 py-20 flex flex-col bg-cover bg-center bg-no-repeat
       bg-[url('/images/crew/background-crew-desktop.jpg')]
       sm:bg-[url('/images/crew/background-crew-tablet.jpg')]
       lg:bg-[url('/images/crew/background-crew-desktop.jpg')]"
     >
       {/* Title */}
       <h1 className="text-xl tracking-widest uppercase text-center lg:text-left">
-        <span className="opacity-50 font-bold">02</span> Meet your crew
+        <span className="opacity-50 font-bold">03</span> Meet your crew
       </h1>
 
       {/* Main content */}
@@ -57,7 +57,9 @@ const Crew = () => {
         {/* Left side - Info */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
           <p className="uppercase text-gray-400 text-lg">{member.role}</p>
-          <h2 className="text-4xl lg:text-5xl font-serif mt-2">{member.name}</h2>
+          <h2 className="text-4xl lg:text-5xl font-serif mt-2">
+            {member.name}
+          </h2>
           <p className="max-w-md text-gray-300 mt-6">{member.bio}</p>
 
           {/* Navigation dots */}
@@ -82,7 +84,7 @@ const Crew = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Crew
+export default Crew;
