@@ -4,10 +4,10 @@ import Destination from "./pages/Destination";
 import Crew from "./pages/Crew";
 import Technology from "./pages/Technology";
 
+
 const App = () => {
   return (
     <div className="relative">
-      {/* Shared Navbar */}
       <Navbar />
 
       {/* Horizontal Scroll Container */}
@@ -38,17 +38,14 @@ const App = () => {
         </section>
       </div>
 
-      {/* Mobile Scroll Indicator */}
-      <div className="md:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
+      {/*Scroll Indicator */}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
         <div className="flex space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2">
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-        </div>
-        <p className="text-white/70 text-xs text-center mt-2">
+          <p className="text-white/70 text-xs text-center ">
           Swipe to navigate
         </p>
+        </div>
+        
       </div>
     </div>
   );
