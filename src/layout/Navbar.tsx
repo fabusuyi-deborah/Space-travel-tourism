@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React from "react";
+import { useState } from "react";
 
 const NavBar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
 
-  const links = useMemo(
+  const links = React.useMemo(
     () => [
       { id: "home", label: "Home", number: "01" },
       { id: "destination", label: "Destination", number: "02" },
@@ -28,12 +28,14 @@ const NavBar: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
-  //Intersection Observer to update active section
-  useEffect(() => {
-    const observerOptions: IntersectionObserverInit = {
-      root: null, // viewport
-      rootMargin: "-30% 0px -60% 0px",
-      threshold: 0.1,
+  const [activeSection, setActiveSection] = useState("home");
+
+  // Update active section on scroll using Intersection Observer
+  React.useEffect(() => {
+    const observerOptions = {
+      root: document.querySelector(".overflow-x-auto"),
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0,
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -46,7 +48,7 @@ const NavBar: React.FC = () => {
 
     const observer = new IntersectionObserver(
       observerCallback,
-      observerOptions
+      observerOptions,
     );
 
     links.forEach((link) => {
@@ -91,7 +93,7 @@ const NavBar: React.FC = () => {
 
       {/* Mobile Navigation */}
       <div className="md:hidden">
-        {/* Top bar */}
+        {/* Top bar (z-50) */}
         <div className="fixed top-0 right-0 w-full flex justify-between items-center p-6 z-50">
           <img src="/images/shared/logo.svg" alt="Logo" className="h-8 w-8" />
           <button
@@ -119,7 +121,7 @@ const NavBar: React.FC = () => {
           <div className="flex justify-end p-6">
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="w-12 h-12 flex items-center justify-center text-white text-xl"
+              className="w-12 h-12 flex items-center justify-center  text-white text-xl "
               aria-label="Close menu"
             >
               &times;
@@ -148,7 +150,7 @@ const NavBar: React.FC = () => {
           </div>
         </nav>
 
-        {/* Overlay */}
+        {/* Overlay (below menu) */}
         {isMobileMenuOpen && (
           <div
             className="fixed inset-0 bg-black/50 z-40"
