@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type CrewMember = {
   role: string;
@@ -40,50 +41,100 @@ const Crew = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const member = crew[activeIndex];
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % crew.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div
-      className="min-h-dvh text-white px-6 lg:px-24 py-20 flex flex-col bg-cover bg-center bg-no-repeat
-      bg-[url('/images/crew/background-crew-desktop.jpg')]
-      sm:bg-[url('/images/crew/background-crew-tablet.jpg')]
-      lg:bg-[url('/images/crew/background-crew-desktop.jpg')]"
-    >
+    <section className="relative w-screen min-h-screen flex flex-col pt-16 md:pt-20 px-6 md:px-12 lg:px-24 bg-transparent">
       {/* Title */}
-      <h1 className="text-xl tracking-widest uppercase text-center lg:text-left">
-        <span className="opacity-50 font-bold">03</span> Meet your crew
-      </h1>
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-base md:text-xl tracking-[4.75px] uppercase text-center md:text-left font-[Barlow_Condensed] mb-6"
+      >
+        <span className="opacity-25 font-bold mr-4">03</span>
+        Meet your crew
+      </motion.h1>
 
-      {/* Main content */}
-      <div className="mt-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-16 flex-1">
-        {/* Left side - Info */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
-          <p className="uppercase text-gray-400 text-lg">{member.role}</p>
-          <h2 className="text-4xl lg:text-5xl font-serif mt-2">
-            {member.name}
-          </h2>
-          <p className="max-w-md text-gray-300 mt-6">{member.bio}</p>
+      <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-end justify-center lg:justify-between gap-10 max-w-[1440px] mx-auto w-full">
+        {/* Info */}
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1 lg:pb-20">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="uppercase text-white/50 text-base md:text-xl lg:text-2xl font-[Bellefair]">
+                {member.role}
+              </p>
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-[Bellefair] uppercase mt-3">
+                {member.name}
+              </h2>
+              <p className="max-w-md text-[#D0D6F9] font-[Barlow] mt-4 leading-relaxed text-sm md:text-base lg:text-lg">
+                {member.bio}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Navigation dots */}
-          <div className="flex gap-4 mt-20">
+          {/* Dots */}
+          <div className="flex gap-4 mt-8 lg:mt-12">
             {crew.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveIndex(index)}
-                className={`w-3 h-3 rounded-full ${activeIndex === index ? "bg-white" : "bg-gray-600"}`}
+                className={`w-3 h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-300 ${
+                  activeIndex === index
+                    ? "bg-white"
+                    : "bg-white/20 hover:bg-white/50"
+                }`}
+                aria-label={`Go to crew member ${index + 1}`}
               />
             ))}
           </div>
         </div>
 
-        {/* Right side - Image */}
-        <div className="flex justify-center lg:flex-1">
-          <img
-            src={member.image || "/placeholder.svg"}
-            alt={member.name}
-            className="block object-contain h-[400px] sm:h-[500px] lg:h-[600px]"
-          />
+        {/* Image */}
+        <div className="flex lg:flex-1 w-full justify-center lg:justify-end items-end">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="
+                w-full
+                max-w-[280px]
+                md:max-w-[360px]
+                lg:max-w-[440px]
+                aspect-[3/4]
+              "
+            >
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-full object-contain"
+                style={{
+                  maskImage:
+                    "linear-gradient(to bottom, black 85%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 85%, transparent 100%)",
+                }}
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

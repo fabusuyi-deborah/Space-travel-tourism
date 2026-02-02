@@ -1,4 +1,7 @@
+"use client";
+
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Technology = {
   terminology: string;
@@ -35,101 +38,108 @@ const technologies: Record<string, Technology> = {
   },
 };
 
-const Technology = () => {
-  const [selectedTechnology, setSelectedTechnology] =
-    useState<string>("spaceport");
-  const techKeys = Object.keys(technologies);
-  const currentTech = technologies[selectedTechnology];
+export default function Technology() {
+  const techKeys = Object.keys(
+    technologies
+  ) as Array<keyof typeof technologies>;
+
+  const [selectedKey, setSelectedKey] =
+    useState<keyof typeof technologies>("launchVehicle");
+
+  const currentTech = technologies[selectedKey];
 
   return (
-    <div
-      className="min-h-dvh bg-cover bg-center bg-no-repeat
-      bg-[url('/images/technology/background-technology-mobile.jpg')]
-      sm:bg-[url('/images/technology/background-technology-tablet.jpg')]
-      lg:bg-[url('/images/technology/background-technology-desktop.jpg')] text-white"
-    >
-      {/* Background with overlay */}
+    <section className="relative w-screen min-h-screen flex flex-col pt-12 lg:pt-24 overflow-hidden">
+      {/* Title */}
+      <div className="px-6 md:px-12 lg:px-24 w-full">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-base md:text-xl tracking-[4.75px] uppercase text-center md:text-left font-[Barlow_Condensed]"
+        >
+          <span className="opacity-25 font-bold mr-4">04</span>
+          Space launch 101
+        </motion.h1>
+      </div>
 
-      <div className="relative z-10 px-6 lg:px-24 py-12 lg:py-20 min-h-dvh flex flex-col">
-        {/* Title */}
-        <h1 className="text-lg lg:text-xl tracking-[0.2em] uppercase text-center lg:text-left mb-12 lg:mb-20 font-light">
-          <span className="opacity-50 font-bold mr-6 text-2xl">04</span>
-          <span className="font-light">Space launch 101</span>
-        </h1>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col lg:flex-row-reverse items-center justify-between mt-8 lg:mt-0 lg:pl-24">
+        {/* Image */}
+        <div className="w-full lg:w-[35%] flex-shrink-0">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedKey}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="
+                w-full
+                aspect-[16/9]
+                md:aspect-[16/8]
+                lg:aspect-[3/4]
+                overflow-hidden
+              "
+            >
+              <picture>
+                <source
+                  media="(min-width: 1024px)"
+                  srcSet={currentTech.imagePortrait}
+                />
+                <img
+                  src={currentTech.imageLandscape}
+                  alt={currentTech.name}
+                  className="w-full h-full object-cover"
+                />
+              </picture>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        {/* Main Content */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20 flex-1">
-          {/* Left Content - Text and Navigation */}
-          <div className="flex-1 lg:max-w-xl order-2 lg:order-1">
-            {/* Mobile/Tablet Navigation - Horizontal dots */}
-            <div className="flex justify-center gap-4 mb-8 lg:hidden">
-              {techKeys.map((key, index) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedTechnology(key)}
-                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    selectedTechnology === key
-                      ? "bg-white text-black border-white"
-                      : "bg-transparent text-white border-white/25 hover:border-white/50"
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
-              {/* Desktop Navigation - Vertical numbers */}
-              <div className="hidden lg:flex flex-col gap-4 lg:mt-8">
-                {techKeys.map((key, index) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedTechnology(key)}
-                    className={`w-20 h-20 rounded-full border-2 flex items-center justify-center text-2xl font-bold transition-all duration-300 ${
-                      selectedTechnology === key
-                        ? "bg-white text-black border-white"
-                        : "bg-transparent text-white border-white/25 hover:border-white/50"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-
-              {/* Technology Details */}
-              <div className="text-center lg:text-left lg:flex-1">
-                <p className="text-white font-[Bellefair] uppercase tracking-wider text-xl mb-2 opacity-75">
-                  {currentTech.terminology}
-                </p>
-                <h2 className="text-3xl  font-[Bellefair] lg:text-5xl xl:text-6xl font-light uppercase mb-6 lg:mb-8 tracking-wide">
-                  {currentTech.name}
-                </h2>
-                <p className="text-[#D0D6F9] font-[Barlow] leading-relaxed lg:leading-loose text-base lg:text-lg max-w-md lg:max-w-none mx-auto lg:mx-0 opacity-90">
-                  {currentTech.description}
-                </p>
-              </div>
-            </div>
+        {/* Text + Navigation */}
+        <div className="flex-1 flex flex-col lg:flex-row items-center gap-6 lg:gap-12 px-6 lg:px-0 py-6 lg:py-0">
+          {/* Navigation */}
+          <div className="flex lg:flex-col gap-4 md:gap-6">
+            {techKeys.map((key, index) => (
+              <button
+                key={key}
+                onClick={() => setSelectedKey(key)}
+                className={`w-10 h-10 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border flex items-center justify-center font-[Bellefair] text-lg md:text-2xl transition-all ${
+                  selectedKey === key
+                    ? "bg-white text-[#0B0D17] border-white"
+                    : "bg-transparent text-white border-white/25 hover:border-white"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
           </div>
 
-          {/* Right Content - Image */}
-          <div className="flex-1 lg:max-w-lg xl:max-w-xl order-1 lg:order-2 w-full">
-            <div className="relative w-full h-64 lg:h-96 xl:h-[500px] overflow-hidden">
-              <img
-                src={currentTech.imageLandscape}
-                alt={currentTech.name}
-                className="w-full h-full object-cover"
-              />
-              <img
-                src={currentTech.imagePortrait}
-                alt={currentTech.name}
-                className="hidden lg:block absolute top-0 left-1/2 transform -translate-x-1/2 w-auto h-full object-cover"
-              />
-            </div>
+          {/* Description */}
+          <div className="text-center lg:text-left max-w-lg">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedKey}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="font-[Barlow_Condensed] text-sm md:text-base tracking-[2.7px] text-[#D0D6F9] uppercase mb-2">
+                  {currentTech.terminology}
+                </p>
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-[Bellefair] uppercase mb-4">
+                  {currentTech.name}
+                </h2>
+                <p className="font-[Barlow] text-[#D0D6F9] leading-relaxed text-sm md:text-base lg:text-lg">
+                  {currentTech.description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default Technology;
+}

@@ -1,96 +1,89 @@
-const Home = () => {
-  const scrollToDestination = () => {
-    const element = document.getElementById("destination");
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "start",
-      });
-    }
+"use client";
+import { motion, type Variants } from "framer-motion";
+
+type HomeProps = {
+  onExplore: () => void;
+};
+
+export default function Home({ onExplore }: HomeProps) {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.3, 
+        delayChildren: 0.8, 
+        ease: "easeInOut"
+      },
+    },
+  };
+
+  const itemsVariants: Variants = {
+    hidden: { opacity: 0, x: -50 }, 
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { duration: 0.8, ease: "easeInOut" } 
+    },
   };
 
   return (
-    <div
-      className="
-        min-h-screen h-full bg-no-repeat bg-cover bg-center
-        bg-[url('/images/background-home-tablet.jpg')]
-        sm:bg-[url('/images/background-home-tablet.jpg')]
-        lg:bg-[url('/images/background-home-desktop.jpg')]
-      "
-    >
-      <div
-        className="
-          flex flex-col items-center justify-center
-          min-h-screen px-4 pt-10 pb-6 text-center
-          gap-8
-          sm:px-6 sm:pt-24 sm:pb-12 sm:gap-12
-          md:gap-16 md:pt-32
-          lg:pt-30 lg:pb-16 lg:flex-row lg:items-end lg:justify-between lg:text-left lg:gap-0 lg:px-8
-        "
+    <div className="relative w-screen h-[100dvh] overflow-hidden bg-no-repeat bg-center ">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible" 
+        viewport={{ once: false, amount: 0.3 }} 
+        className="flex flex-col items-center justify-center h-full w-full px-6 pt-24 pb-12 text-center gap-12 md:gap-12 lg:flex-row lg:items-center lg:justify-between lg:text-left lg:px-24 max-w-[1440px] mx-auto"
       >
         {/* Left Section (Text) */}
-        <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-          <h2
-            className="uppercase text-md text-[#D0D6F9] mb-3
-                         md:text-lg md:mb-5
-                         lg:text-xl lg:mb-6
-                         font-[Barlow_Condensed]"
+        <div className="max-w-md lg:max-w-xl z-10">
+          <motion.h2
+            variants={itemsVariants}
+            className="uppercase text-base tracking-[2.7px] text-[#D0D6F9] mb-4 md:text-xl lg:text-2xl font-[Barlow_Condensed]"
           >
             So, you want to travel to
-          </h2>
-          <h1
-            className="uppercase text-6xl mb-4
-                         sm:text-7xl sm:mb-5
-                         md:text-8xl md:mb-6
-                         lg:text-[8rem] lg:mb-7
-                         xl:text-[10rem] xl:mb-8
-                         leading-none
-                         text-white
-                         font-[Bellefair]"
+          </motion.h2>
+
+          <motion.h1
+            variants={itemsVariants}
+            className="uppercase text-7xl mb-6 sm:text-8xl md:text-9xl lg:text-[10rem] leading-none text-white font-[Bellefair]"
           >
             Space
-          </h1>
-          <p
-            className=" text-[#D0D6F9] leading-relaxed text-sm
-                        sm:text-base sm:leading-7
-                        md:text-lg md:leading-8
-                        lg:leading-8
-                        xl:leading-9
-                        text-balance
-                        font-[Barlow]"
+          </motion.h1>
+          
+          <motion.p
+            variants={itemsVariants}
+            className="text-[#D0D6F9] leading-relaxed text-base max-w-sm lg:max-w-md mx-auto lg:mx-0 font-[Barlow]"
           >
             Let's face it; if you want to go to space, you might as well
             genuinely go to outer space and not hover kind of on the edge of it.
             Well sit back, and relax because we'll give you a truly out of this
             world experience!
-          </p>
+          </motion.p>
         </div>
 
         {/* Right Section (Explore Button) */}
-        <div className="flex items-center justify-center lg:flex-shrink-0">
-          <button
-            onClick={scrollToDestination}
-            className="
-              w-32 h-32 rounded-full bg-white text-black uppercase
-              text-lg font-light flex items-center justify-center
-              font-[Bellefair]
-              transition-all duration-500 ease-out
-              hover:scale-105 hover:shadow-[0_0_0_20px_rgba(255,255,255,0.1)]
-              active:scale-95
-              sm:w-40 sm:h-40 sm:text-xl sm:hover:shadow-[0_0_0_30px_rgba(255,255,255,0.15)]
-              md:w-48 md:h-48 md:text-2xl md:hover:shadow-[0_0_0_35px_rgba(255,255,255,0.2)]
-              lg:w-56 lg:h-56 lg:text-3xl lg:hover:shadow-[0_0_0_40px_rgba(255,255,255,0.2)]
-              xl:w-64 xl:h-64 xl:text-4xl xl:hover:shadow-[0_0_0_50px_rgba(255,255,255,0.25)]
-              focus:outline-none focus:ring-4 focus:ring-white/30
-            "
+        <div className="relative flex items-center justify-center lg:mb-12 ">
+          <motion.div 
+            variants={{
+              hidden: { opacity: 0, scale: 0.5 },
+              visible: { opacity: 1, scale: 1, transition: { duration: 1, ease: "backOut" } }
+            }}
+            className="relative group flex items-center justify-center"
           >
-            Explore
-          </button>
+            <div className="absolute inset-0 rounded-full bg-white/5 scale-125 animate-pulse group-hover:bg-white/10 transition-all duration-700" />
+            <div className="absolute inset-0 rounded-full bg-white/5 scale-150 animate-ping opacity-20 pointer-events-none" />
+
+            <button
+              onClick={onExplore}
+              className="relative z-10 w-45 h-45 sm:w-56 sm:h-56 lg:w-72 lg:h-72 rounded-full bg-white text-black uppercase text-xl sm:text-2xl lg:text-3xl tracking-[2px] font-[Bellefair] flex items-center justify-center transition-all duration-500 ease-out hover:shadow-[0_0_0_50px_rgba(255,255,255,0.1)] active:scale-90 focus:outline-none"
+            >
+              Explore
+            </button>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
-};
-
-export default Home;
+}

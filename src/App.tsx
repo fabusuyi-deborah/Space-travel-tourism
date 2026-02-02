@@ -1,57 +1,185 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import Destination from "./pages/Destination";
 import Crew from "./pages/Crew";
 import Technology from "./pages/Technology";
+import Preloader from "./components/Preloader";
+import { motion, AnimatePresence } from "framer-motion";
 
-const App = () => {
+const navItems = [
+  { id: "home", label: "01 HOME" },
+  { id: "destination", label: "02 DESTINATION" },
+  { id: "crew", label: "03 CREW" },
+  { id: "technology", label: "04 TECHNOLOGY" },
+];
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState("home");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: scrollContainerRef.current,
+        threshold: 0.5,
+      }
+    );
+
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [loading]);
+
+  const handleScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        inline: "start",
+      });
+    }
+  };
+
   return (
-    <div className="relative">
-      {/* Shared Navbar */}
-      <Navbar />
+    <div className="relative bg-[#0B0D17] text-white min-h-screen overflow-x-hidden">
+      {loading && <Preloader />}
 
-      {/* Horizontal Scroll Container */}
-      <div className="flex overflow-x-auto snap-x snap-proximity h-screen scrollbar-hide">
-        <section
-          id="home"
-          className="flex-shrink-0 w-screen snap-start h-screen overflow-auto md:overflow-hidden"
-        >
-          <Home />
-        </section>
-        <section
-          id="destination"
-          className="flex-shrink-0 w-screen snap-start h-screen overflow-auto md:overflow-hidden"
-        >
-          <Destination />
-        </section>
-        <section
-          id="crew"
-          className="flex-shrink-0 w-screen snap-start h-screen overflow-auto md:overflow-hidden"
-        >
-          <Crew />
-        </section>
-        <section
-          id="technology"
-          className="flex-shrink-0 w-screen snap-start h-screen overflow-auto md:overflow-hidden"
-        >
-          <Technology />
-        </section>
+      {/* BACKGROUND LAYER */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          />
+        </AnimatePresence>
+
+        {/* STARFIELD */}
+        <motion.div
+          animate={{
+            x:
+              activeSection === "home"
+                ? 0
+                : activeSection === "destination"
+                ? -50
+                : activeSection === "crew"
+                ? -100
+                : -150,
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            x: { type: "spring", stiffness: 20, damping: 30 },
+            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+          }}
+          className="absolute inset-0 w-[120%] h-full"
+          style={{
+            backgroundImage: `
+              radial-gradient(white, rgba(255,255,255,0.2) 2px, transparent 40px),
+              radial-gradient(white, rgba(255,255,255,0.15) 1px, transparent 30px),
+              radial-gradient(white, rgba(255,255,255,0.1) 2px, transparent 40px)
+            `,
+            backgroundSize: "550px 550px, 350px 350px, 250px 250px",
+            backgroundPosition: "0 0, 40px 60px, 130px 270px",
+          }}
+        />
       </div>
 
-      {/* Mobile Scroll Indicator */}
-      <div className="md:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
-        <div className="flex space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2">
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
-          <div className="w-2 h-2 rounded-full bg-white/50"></div>
+      {/* CONTENT LAYER */}
+      <div
+        className={`relative z-10 transition-opacity duration-1000 ${
+          loading ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <Navbar activeSection={activeSection} onScrollTo={handleScroll} />
+
+        {/* VERTICAL NAV DOTS */}
+        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-[60] hidden md:flex flex-col items-center gap-8">
+          <div className="flex flex-col gap-5 bg-white/5 backdrop-blur-xl p-4 rounded-full border border-white/10 shadow-2xl">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleScroll(item.id)}
+                className="group relative flex items-center justify-center"
+              >
+                <span className="absolute right-10 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white text-black text-[10px] px-3 py-1 rounded-sm tracking-[2px] uppercase pointer-events-none whitespace-nowrap">
+                  {item.id}
+                </span>
+                <div
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+                    activeSection === item.id
+                      ? "bg-white scale-[1.8] shadow-[0_0_15px_rgba(255,255,255,0.8)]"
+                      : "bg-white/20"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
         </div>
-        <p className="text-white/70 text-xs text-center mt-2">
-          Swipe to navigate
-        </p>
+
+        {/* MOBILE SWIPE INDICATOR */}
+        <div className="md:hidden fixed bottom-10 right-6 z-[60] pointer-events-none flex flex-col items-center gap-3">
+          <div className="w-[1px] h-12 bg-gradient-to-t from-white/60 to-transparent animate-pulse" />
+          <p className="text-white/40 text-[9px] tracking-[3px] uppercase [writing-mode:vertical-lr] rotate-180 font-bold">
+            Swipe
+          </p>
+        </div>
+
+        {/* HORIZONTAL SCROLL CONTAINER */}
+        <div
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar"
+        >
+          <section
+            id="home"
+            className="flex-shrink-0 w-screen min-h-screen snap-start"
+          >
+            <Home onExplore={() => handleScroll("destination")} />
+          </section>
+
+          <section
+            id="destination"
+            className="flex-shrink-0 w-screen min-h-screen snap-start"
+          >
+            <Destination />
+          </section>
+
+          <section
+            id="crew"
+            className="flex-shrink-0 w-screen min-h-screen snap-start"
+          >
+            <Crew />
+          </section>
+
+          <section
+            id="technology"
+            className="flex-shrink-0 w-screen min-h-screen snap-start"
+          >
+            <Technology />
+          </section>
+        </div>
       </div>
     </div>
   );
-};
-
-export default App;
+}

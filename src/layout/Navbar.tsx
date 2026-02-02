@@ -1,165 +1,116 @@
 "use client";
-
-import React from "react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const NavBar: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+interface NavItemProps {
+  item: { id: string; label: string };
+  activeSection: string;
+  onClick: (id: string) => void;
+  isMobile: boolean;
+}
 
-  const links = React.useMemo(
-    () => [
-      { id: "home", label: "Home", number: "01" },
-      { id: "destination", label: "Destination", number: "02" },
-      { id: "crew", label: "Crew", number: "03" },
-      { id: "technology", label: "Technology", number: "04" },
-    ],
-    []
-  );
+const navItems = [
+  { id: "home", label: "01 HOME" },
+  { id: "destination", label: "02 DESTINATION" },
+  { id: "crew", label: "03 CREW" },
+  { id: "technology", label: "04 TECHNOLOGY" },
+];
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
+const Navbar = ({ activeSection }: { activeSection: string; onScrollTo: (id: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleScroll = (id: string) => {
+    const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({
-        behavior: window.innerWidth < 768 ? "auto" : "smooth",
-        block: "start",
-        inline: "start",
-      });
+      element.scrollIntoView({ behavior: "smooth" });
+      setIsOpen(false);
     }
-    setIsMobileMenuOpen(false);
   };
 
-  const [activeSection, setActiveSection] = useState("home");
-
-  // Update active section on scroll using Intersection Observer
-  React.useEffect(() => {
-    const observerOptions = {
-      root: document.querySelector(".overflow-x-auto"),
-      rootMargin: "-50% 0px -50% 0px",
-      threshold: 0,
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions,
-    );
-
-    links.forEach((link) => {
-      const element = document.getElementById(link.id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    return () => observer.disconnect();
-  }, [links]);
-
   return (
-    <>
-      {/* Desktop Navigation */}
-      <div className="hidden md:fixed md:flex top-0 left-0 w-full justify-between items-center p-6 lg:px-16 z-50">
-        <div className="flex items-center gap-4">
-          <img src="/images/shared/logo.svg" alt="Logo" className="h-8 w-8" />
-          <hr className="hidden lg:block w-100 border-t border-gray-400 opacity-50" />
-        </div>
-
-        <nav className="bg-black/30 backdrop-blur-80 px-6 py-6 rounded-lg">
-          <ul className="flex gap-6 text-white text-sm uppercase tracking-widest">
-            {links.map((link) => (
-              <li key={link.id}>
-                <button
-                  onClick={() => scrollToSection(link.id)}
-                  className={`pb-2 transition-colors ${
-                    activeSection === link.id
-                      ? "border-b-2 border-white"
-                      : "border-b-2 border-transparent hover:border-gray-400"
-                  }`}
-                >
-                  <span className="mr-2 font-bold">{link.number}</span>
-                  {link.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <nav className="fixed top-0 w-full z-50 flex justify-between items-center p-4 md:p-0 md:top-4 lg:top-4">
+      {/* Logo */}
+      <div className="md:ml-12 shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><g fill="none" fillRule="evenodd"><circle fill="#FFF" cx="24" cy="24" r="24"/><path d="M24 0c0 13.255-10.745 24-24 24 13.255 0 24 10.745 24 24 0-13.255 10.745-24 24-24-13.255 0-24-10.745-24-24z" fill="#0B0D17"/></g></svg>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden">
-        {/* Top bar (z-50) */}
-        <div className="fixed top-0 right-0 w-full flex justify-between items-center p-6 z-50">
-          <img src="/images/shared/logo.svg" alt="Logo" className="h-8 w-8" />
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-white p-2"
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            <div className="w-6 h-0.5 bg-white mb-1"></div>
-            <div className="w-6 h-0.5 bg-white mb-1"></div>
-            <div className="w-6 h-0.5 bg-white"></div>
-          </button>
-        </div>
+      <div className="hidden lg:block h-[1px] bg-white/20 w-[35%] translate-x-8 z-20"></div>
 
-        <nav
-          id="mobile-menu"
-          role="dialog"
-          aria-modal="true"
-          className={`fixed top-0 right-0 h-full w-64 bg-black/90 backdrop-blur-md transform transition-transform duration-300 z-[60] ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          {/* Close button */}
-          <div className="flex justify-end p-6">
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-12 h-12 flex items-center justify-center  text-white text-xl "
-              aria-label="Close menu"
+      {/* Hamburger Toggle */}
+      <button onClick={() => setIsOpen(!isOpen)} className="flex flex-col gap-1.5 md:hidden z-[60]">
+        <motion.span 
+          animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+          className="w-6 h-[2px] bg-[#D0D6F9] block"
+        />
+        <motion.span 
+          animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+          className="w-6 h-[2px] bg-[#D0D6F9] block"
+        />
+        <motion.span 
+          animate={isOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+          className="w-6 h-[2px] bg-[#D0D6F9] block"
+        />
+      </button>
+
+      {/* DESKTOP MENU (Always visible on md+) */}
+      <ul className="hidden md:flex gap-12 bg-white/5 backdrop-blur-2xl px-8 lg:px-32 py-8 border-b border-white/10">
+        {navItems.map((item) => (
+          <NavItem key={item.id} item={item} activeSection={activeSection} onClick={handleScroll} isMobile={false} />
+        ))}
+      </ul>
+
+      {/* MOBILE MENU (Animated Drawer) */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Dark Backdrop Overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+            />
+            
+            <motion.ul
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              className="fixed top-0 right-0 h-screen w-[70%] bg-white/[0.05] backdrop-blur-[40px] flex flex-col gap-8 pt-32 pl-10 z-50 md:hidden shadow-2xl"
             >
-              &times;
-            </button>
-          </div>
-
-          {/* Links */}
-          <div className="px-8 pt-4">
-            <ul className="space-y-8">
-              {links.map((link) => (
-                <li key={link.id}>
-                  <button
-                    onClick={() => scrollToSection(link.id)}
-                    className={`block text-white text-base uppercase tracking-widest transition-colors ${
-                      activeSection === link.id
-                        ? "border-r-4 border-white pr-4"
-                        : "border-r-4 border-transparent pr-4 hover:border-gray-400"
-                    }`}
-                  >
-                    <span className="mr-4 font-bold">{link.number}</span>
-                    {link.label}
-                  </button>
-                </li>
+              {navItems.map((item) => (
+                <NavItem key={item.id} item={item} activeSection={activeSection} onClick={handleScroll} isMobile={true} />
               ))}
-            </ul>
-          </div>
-        </nav>
-
-        {/* Overlay (below menu) */}
-        {isMobileMenuOpen && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
+            </motion.ul>
+          </>
         )}
-      </div>
-    </>
+      </AnimatePresence>
+    </nav>
   );
 };
 
-export default NavBar;
+// Reusable NavItem component
+const NavItem = ({ item, activeSection, onClick, isMobile }: NavItemProps) => (
+  <li className="relative group list-none">
+    <button
+      onClick={() => onClick(item.id)}
+      className={`text-base md:text-sm tracking-[2.7px] uppercase font-sans-condensed flex gap-3 transition-all duration-300 ${
+        activeSection === item.id ? "text-white" : "text-[#D0D6F9] hover:text-white"
+      }`}
+    >
+      <span className="font-bold">{item.label.split(" ")[0]}</span>
+      <span className="font-light">{item.label.split(" ")[1]}</span>
+    </button>
+    <div
+      className={`absolute transition-all duration-500 bg-white
+        ${isMobile 
+          ? "right-0 top-0 h-full w-1" 
+          : "bottom-[-34px] left-0 w-full h-[3px]"}
+        ${activeSection === item.id ? "opacity-100" : "opacity-0"}
+      `}
+    />
+  </li>
+);
+
+export default Navbar;
