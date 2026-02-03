@@ -11,8 +11,6 @@ export default function Destination() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
   
   const destinationKeys = Object.keys(destinations) as Array<keyof typeof destinations>;
   const activeKey = destinationKeys[activeIndex];
@@ -24,8 +22,6 @@ export default function Destination() {
 
   useEffect(() => {
     setIsVisible(true);
-    // Detect if mobile
-    setIsMobile(window.matchMedia('(max-width: 768px)').matches);
   }, []);
 
   // Prevent body scroll when modal is open
@@ -43,45 +39,6 @@ export default function Destination() {
   const handleDestinationClick = (index: number) => {
     setActiveIndex(index);
     setShowModal(true);
-  };
-
-  // Mobile swipe handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null) return;
-    
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    
-    // Swipe threshold
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        // Swiped left - next planet
-        setActiveIndex((prev) => (prev + 1) % destinationKeys.length);
-      } else {
-        // Swiped right - previous planet
-        setActiveIndex((prev) => (prev - 1 + destinationKeys.length) % destinationKeys.length);
-      }
-    }
-    
-    setTouchStartX(null);
-  };
-
-  // Mobile tap to preview
-  const handleMobileTap = (index: number) => {
-    if (isMobile) {
-      if (index === activeIndex) {
-        // Double tap or tap on active opens modal
-        setShowModal(true);
-      } else {
-        // Tap to preview
-        setHoveredIndex(index);
-        setTimeout(() => setHoveredIndex(null), 2000); // Auto-hide after 2s
-      }
-    }
   };
 
   return (
@@ -107,8 +64,6 @@ export default function Destination() {
           animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
           transition={{ duration: 1, delay: 0.4 }}
           className="relative mb-8 md:mb-12"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
         >
           <div className="relative w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[320px]">
             <AnimatePresence mode="wait">
@@ -165,32 +120,6 @@ export default function Destination() {
             </AnimatePresence>
           </div>
 
-          {/* Swipe Indicators - Mobile Only */}
-          {isMobile && (
-            <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none">
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 0.3, x: 0 }}
-                transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
-                className="text-white/40"
-              >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </motion.div>
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 0.3, x: 0 }}
-                transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
-                className="text-white/40"
-              >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </motion.div>
-            </div>
-          )}
-
           {/* Quick Stats on Hover */}
           <AnimatePresence>
             {hoveredIndex !== null && hoveredDestination && (
@@ -225,9 +154,9 @@ export default function Destination() {
           {destinationKeys.map((key, index) => (
             <button
               key={key}
-              onClick={() => isMobile ? handleMobileTap(index) : handleDestinationClick(index)}
-              onMouseEnter={() => !isMobile && setHoveredIndex(index)}
-              onMouseLeave={() => !isMobile && setHoveredIndex(null)}
+              onClick={() => handleDestinationClick(index)}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
               className="group relative"
             >
               <motion.span 
@@ -283,11 +212,11 @@ export default function Destination() {
           className="absolute bottom-8 md:bottom-4"
         >
           <p className="text-white/30 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em] animate-pulse">
-            {isMobile ? "Swipe planet or tap names" : "Tap to explore"}
+            Tap to explore
           </p>
         </motion.div>
 
-        {/* Hover/Tap Instruction */}
+        {/* Hover Instruction */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: hoveredIndex !== null ? 1 : 0 }}
@@ -295,9 +224,7 @@ export default function Destination() {
           className="absolute bottom-8 md:bottom-4"
         >
           <p className="text-white/50 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em]">
-            {hoveredIndex === activeIndex 
-              ? `Viewing ${hoveredKey}${isMobile ? ' - Tap again for details' : ''}` 
-              : `${isMobile ? 'Tap again to explore' : 'Click to explore'} ${hoveredKey}`}
+            {hoveredIndex === activeIndex ? `Viewing ${hoveredKey}` : `Click to explore ${hoveredKey}`}
           </p>
         </motion.div>
 
