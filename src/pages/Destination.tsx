@@ -1,180 +1,308 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "../index.css"
+import { destinations } from "../data/destinationData";
+import Modal from "../components/Modal";   
 
-type DestinationData = {
-  name: string;
-  description: string;
-  distance: string;
-  travelTime: string;
-  image: string;
-};
-
-const destinations: Record<string, DestinationData> = {
-  moon: {
-    name: "MOON",
-    description: "See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.",
-    distance: "384,400 KM",
-    travelTime: "3 DAYS",
-    image: "/images/destination/image-moon.png",
-  },
-  mars: {
-    name: "MARS",
-    description: "Don’t forget to pack your hiking boots. You’ll need them to tackle Olympus Mons, the tallest planetary mountain in our solar system. It’s two and a half times the size of Everest!",
-    distance: "225 MIL. KM",
-    travelTime: "9 MONTHS",
-    image: "/images/destination/image-mars.png",
-  },
-  europa: {
-    name: "EUROPA",
-    description: "The smallest of the four Galilean moons orbiting Jupiter, Europa is a winter lover’s dream. With an icy surface, it’s perfect for a bit of ice skating, curling, hockey, or simple relaxation in your snug wintery cabin.",
-    distance: "628 MIL. KM",
-    travelTime: "3 YEARS",
-    image: "/images/destination/image-europa.png",
-  },
-  titan: {
-    name: "TITAN",
-    description: "The only moon known to have a dense atmosphere other than Earth, Titan is a home away from home (just a few hundred degrees colder!). As a bonus, you get striking views of the Rings of Saturn.",
-    distance: "1.6 BIL. KM",
-    travelTime: "7 YEARS",
-    image: "/images/destination/image-titan.png",
-  },
-};
 
 export default function Destination() {
-  const [active, setActive] = useState<keyof typeof destinations>("moon");
-  const d = destinations[active];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  const destinationKeys = Object.keys(destinations) as Array<keyof typeof destinations>;
+  const activeKey = destinationKeys[activeIndex];
+  const activeDestination = destinations[activeKey];
+
+  // Get hovered destination for preview
+  const hoveredKey = hoveredIndex !== null ? destinationKeys[hoveredIndex] : null;
+  const hoveredDestination = hoveredKey ? destinations[hoveredKey] : null;
+
+  useEffect(() => {
+    setIsVisible(true);
+    // Detect if mobile
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+  }, []);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showModal]);
+
+  const handleDestinationClick = (index: number) => {
+    setActiveIndex(index);
+    setShowModal(true);
+  };
+
+  // Mobile swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    
+    // Swipe threshold
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Swiped left - next planet
+        setActiveIndex((prev) => (prev + 1) % destinationKeys.length);
+      } else {
+        // Swiped right - previous planet
+        setActiveIndex((prev) => (prev - 1 + destinationKeys.length) % destinationKeys.length);
+      }
+    }
+    
+    setTouchStartX(null);
+  };
+
+  // Mobile tap to preview
+  const handleMobileTap = (index: number) => {
+    if (isMobile) {
+      if (index === activeIndex) {
+        // Double tap or tap on active opens modal
+        setShowModal(true);
+      } else {
+        // Tap to preview
+        setHoveredIndex(index);
+        setTimeout(() => setHoveredIndex(null), 2000); // Auto-hide after 2s
+      }
+    }
+  };
 
   return (
-    // Section Container
-    <section className="relative w-screen min-h-screen flex flex-col pt-32 md:pt-40 lg:pt-44 pb-12 px-8 lg:px-24 overflow-x-hidden">
-      
-      {/* 01 Title */}
-      <motion.h1 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-base md:text-xl lg:text-2xl tracking-[4.75px] uppercase text-center md:text-left font-[Barlow_Condensed] mb-8 lg:mb-16 max-w-[1440px] mx-auto w-full"
-      >
-        <span className="opacity-25 font-bold mr-4">02</span> Pick your destination
-      </motion.h1>
-
-      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-12 lg:gap-20 max-w-[1440px] mx-auto w-full">
+    <>
+      <section className="relative w-full h-screen flex flex-col pt-16 items-center justify-center px-4 sm:px-6 md:px-10 lg:px-12 overflow-hidden bg-transparent">
         
-        {/* Left Side: Planet */}
-        <div className="relative flex justify-center items-center lg:flex-1 w-full">
-          {/* Constant Spin Wrapper  */}
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -30 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="absolute top-8 md:top-12 lg:top-20 left-4 md:left-8 lg:left-12 right-4 z-10"
+        >
+          <h1 className="text-white/40 mt-4 text-xs sm:text-sm md:text-base font-[Barlow_Condensed] uppercase tracking-[0.3em] md:tracking-[0.4em] text-center lg:text-left">
+            <span className="text-white/20 mr-4 font-bold ">02</span>
+            Pick Your Destination
+          </h1>
+        </motion.div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-
-              {/* Continuous rotation */}
+        {/* Planet Image - Center */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="relative mb-8 md:mb-12"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="relative w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[320px]">
+            <AnimatePresence mode="wait">
               <motion.img
-                src={d.image}
-                alt={d.name}
-                animate={{ rotate: 360 }}
-                transition={{
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "linear",
-
+                key={activeKey}
+                src={activeDestination.image}
+                alt={activeDestination.name}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: hoveredIndex === activeIndex ? 1.05 : hoveredIndex !== null && hoveredIndex !== activeIndex ? 0.95 : 1,
+                  filter: hoveredIndex !== null && hoveredIndex !== activeIndex 
+                    ? "brightness(0.6) blur(2px)" 
+                    : hoveredIndex === activeIndex
+                    ? "brightness(1.2) blur(0px) drop-shadow(0 0 40px rgba(255,255,255,0.4))"
+                    : "brightness(1) blur(0px)"
                 }}
-
-                className="w-42 h-48 md:w-72 md:h-72 lg:w-[445px] lg:h-[445px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)]"
-
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ 
+                  duration: 0.6,
+                  ease: [0.25, 0.1, 0.25, 1]
+                }}
+                className="w-full h-full object-contain drop-shadow-[0_0_60px_rgba(255,255,255,0.15)]"
+                style={{
+                  animation: "spin 200s linear infinite"
+                }}
               />
+            </AnimatePresence>
 
-            </motion.div>
+            {/* Hover Preview Planet - Appears on top when hovering different name */}
+            <AnimatePresence>
+              {hoveredIndex !== null && hoveredIndex !== activeIndex && hoveredDestination && (
+                <motion.img
+                  key={`hover-${hoveredKey}`}
+                  src={hoveredDestination.image}
+                  alt={hoveredDestination.name}
+                  initial={{ opacity: 0, scale: 0.7, rotate: -30 }}
+                  animate={{ 
+                    opacity: 0.8, 
+                    scale: 0.85,
+                    rotate: 0
+                  }}
+                  exit={{ opacity: 0, scale: 0.7, rotate: 30 }}
+                  transition={{ 
+                    duration: 0.4,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                  className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_80px_rgba(255,255,255,0.3)] pointer-events-none"
+                  style={{
+                    animation: "spin 200s linear infinite"
+                  }}
+                />
+              )}
+            </AnimatePresence>
+          </div>
 
+          {/* Swipe Indicators - Mobile Only */}
+          {isMobile && (
+            <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 0.3, x: 0 }}
+                transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+                className="text-white/40"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 0.3, x: 0 }}
+                transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+                className="text-white/40"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </motion.div>
+            </div>
+          )}
+
+          {/* Quick Stats on Hover */}
+          <AnimatePresence>
+            {hoveredIndex !== null && hoveredDestination && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+                className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex gap-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 whitespace-nowrap"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-[#D0D6F9] text-[10px] font-[Barlow_Condensed] uppercase tracking-wider">Distance:</span>
+                  <span className="text-white text-sm font-[Bellefair]">{hoveredDestination.distance}</span>
+                </div>
+                <div className="w-px bg-white/20" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[#D0D6F9] text-[10px] font-[Barlow_Condensed] uppercase tracking-wider">Time:</span>
+                  <span className="text-white text-sm font-[Bellefair]">{hoveredDestination.travelTime}</span>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
-        {/* Right Side: Info Column */}
-        <div className="flex flex-col items-center lg:items-start lg:flex-1 text-center lg:text-left max-w-lg z-10">
-          
-          {/* Nav Tabs */}
-          <div className="flex gap-8 text-sm md:text-base uppercase tracking-[2.7px] font-[Barlow_Condensed] text-[#D0D6F9] mb-8">
-            {(Object.keys(destinations) as Array<keyof typeof destinations>).map((key) => (
-              <button
-                key={key}
-                onClick={() => setActive(key)}
-                className={`relative pb-3 transition-colors hover:text-white ${
-                  active === key ? "text-white" : ""
-                }`}
+        {/* Navigation Buttons - Bottom Center */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-center z-10"
+        >
+          {destinationKeys.map((key, index) => (
+            <button
+              key={key}
+              onClick={() => isMobile ? handleMobileTap(index) : handleDestinationClick(index)}
+              onMouseEnter={() => !isMobile && setHoveredIndex(index)}
+              onMouseLeave={() => !isMobile && setHoveredIndex(null)}
+              className="group relative"
+            >
+              <motion.span 
+                className={`
+                  block text-3xl sm:text-4xl md:text-5xl lg:text-6xl
+                  font-[Bellefair] uppercase
+                  transition-all duration-500 ease-out
+                  ${activeIndex === index 
+                    ? 'text-white tracking-wider' 
+                    : hoveredIndex === index
+                    ? 'text-white/80'
+                    : 'text-white/30 hover:text-white/60'
+                  }
+                `}
+                animate={{
+                  scale: hoveredIndex === index ? 1.05 : 1,
+                  textShadow: hoveredIndex === index 
+                    ? "0 0 30px rgba(255,255,255,0.5)" 
+                    : "0 0 0px rgba(255,255,255,0)"
+                }}
+                transition={{ duration: 0.3 }}
               >
                 {key}
-                {active === key && (
-                  <motion.div 
-                    layoutId="destinationUnderline"
-                    className="absolute bottom-0 left-0 w-full h-[3px] bg-white"
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+              </motion.span>
+              
+              {/* Active indicator */}
+              {activeIndex === index && (
+                <motion.div
+                  layoutId="activeIndicator"
+                  className="absolute -bottom-1 left-0 right-0 h-[2px] bg-white/60"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
 
-          {/* Text Content */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.5 }}
-              className="w-full"
-            >
-              <h2 className="text-6xl md:text-8xl lg:text-[100px] font-[Bellefair] uppercase leading-none">
-                {d.name}
-              </h2>
-              <p className="font-[Barlow] text-[#D0D6F9] mt-6 leading-relaxed text-base md:text-lg min-h-[140px] md:min-h-[120px]">
-                {d.description}
-              </p>
-            </motion.div>
-          </AnimatePresence>
+              {/* Hover glow effect */}
+              {hoveredIndex === index && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="absolute inset-0 bg-white/5 blur-2xl rounded-full -z-10"
+                />
+              )}
+            </button>
+          ))}
+        </motion.div>
 
-          <hr className="w-full border-white/10 my-8" />
+        {/* Tap to Explore Hint */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible && !showModal && hoveredIndex === null ? 1 : 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="absolute bottom-8 md:bottom-4"
+        >
+          <p className="text-white/30 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em] animate-pulse">
+            {isMobile ? "Swipe planet or tap names" : "Tap to explore"}
+          </p>
+        </motion.div>
 
-          {/* Stats Footer */}
-          <div className="flex flex-col md:flex-row w-full gap-8 md:gap-16 md:justify-center">
-            <div className="flex flex-col gap-3">
-              <span className="text-xs uppercase tracking-[2.35px] font-[Barlow_Condensed] text-[#D0D6F9]">
-                Avg. Distance
-              </span>
-              <AnimatePresence mode="wait">
-                <motion.span 
-                  key={active}
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }}
-                  className="text-3xl font-[Bellefair] uppercase"
-                >
-                  {d.distance}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-            <div className="flex flex-col gap-3">
-              <span className="text-xs uppercase tracking-[2.35px] font-[Barlow_Condensed] text-[#D0D6F9]">
-                Est. Travel Time
-              </span>
-              <AnimatePresence mode="wait">
-                <motion.span 
-                  key={active}
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }}
-                  className="text-3xl font-[Bellefair] uppercase"
-                >
-                  {d.travelTime}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        {/* Hover/Tap Instruction */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: hoveredIndex !== null ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute bottom-8 md:bottom-4"
+        >
+          <p className="text-white/50 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em]">
+            {hoveredIndex === activeIndex 
+              ? `Viewing ${hoveredKey}${isMobile ? ' - Tap again for details' : ''}` 
+              : `${isMobile ? 'Tap again to explore' : 'Click to explore'} ${hoveredKey}`}
+          </p>
+        </motion.div>
+
+        <Modal showModal={showModal} setShowModal={setShowModal} activeDestination={activeDestination} />
+      </section>
+    </>
   );
 }
