@@ -5,7 +5,7 @@ import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import Destination from "./pages/Destination";
 import Crew from "./pages/Crew";
-// import Technology from "./pages/Technology";
+import Technology from "./pages/Technology";
 import Preloader from "./components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -176,7 +176,7 @@ export default function App() {
             id="technology"
             className="flex-shrink-0 w-screen min-h-screen snap-start"
           >
-            {/* <Technology /> */}
+            <Technology />
           </section>
         </div>
       </div>

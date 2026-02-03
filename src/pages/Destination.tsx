@@ -58,7 +58,7 @@ export default function Destination() {
           </h1>
         </motion.div>
 
-        {/* Planet Image - Center */}
+        {/* Planet Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
@@ -93,7 +93,7 @@ export default function Destination() {
               />
             </AnimatePresence>
 
-            {/* Hover Preview Planet - Appears on top when hovering different name */}
+            {/* Hover Preview Planet */}
             <AnimatePresence>
               {hoveredIndex !== null && hoveredIndex !== activeIndex && hoveredDestination && (
                 <motion.img
@@ -118,30 +118,121 @@ export default function Destination() {
                 />
               )}
             </AnimatePresence>
-          </div>
 
-          {/* Quick Stats on Hover */}
-          <AnimatePresence>
-            {hoveredIndex !== null && hoveredDestination && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-                className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex gap-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 whitespace-nowrap"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-[#D0D6F9] text-[10px] font-[Barlow_Condensed] uppercase tracking-wider">Distance:</span>
-                  <span className="text-white text-sm font-[Bellefair]">{hoveredDestination.distance}</span>
-                </div>
-                <div className="w-px bg-white/20" />
-                <div className="flex items-center gap-2">
-                  <span className="text-[#D0D6F9] text-[10px] font-[Barlow_Condensed] uppercase tracking-wider">Time:</span>
-                  <span className="text-white text-sm font-[Bellefair]">{hoveredDestination.travelTime}</span>
-                </div>
+            {/* Orbital Stats System */}
+            <AnimatePresence mode="wait">
+              <motion.div key={`stats-${activeKey}`}>
+                {/* Distance Stat - Top Right Orbit */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                  animate={{ 
+                    opacity: hoveredIndex !== null ? 1 : 0.5,
+                    scale: 1,
+                    x: 120,
+                    y: -80
+                  }}
+                  exit={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                  transition={{ 
+                    duration: 0.8,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: 360,
+                    }}
+                    transition={{ 
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="relative"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: hoveredIndex !== null ? 1.1 : 1
+                      }}
+                      className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 shadow-xl"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-[#D0D6F9] text-[9px] font-[Barlow_Condensed] uppercase tracking-wider">Distance</span>
+                        <span className="text-white text-sm font-[Bellefair]">{activeDestination.distance}</span>
+                      </div>
+                    </motion.div>
+                    {/* Connecting line/orbit path */}
+                    <div className={`absolute top-1/2 right-full w-20 h-px bg-gradient-to-l transition-opacity duration-500 ${
+                      hoveredIndex !== null ? 'from-white/40 opacity-100' : 'from-white/20 opacity-50'
+                    } to-transparent`} />
+                  </motion.div>
+                </motion.div>
+
+                {/* Travel Time Stat - Bottom Left Orbit */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                  animate={{ 
+                    opacity: hoveredIndex !== null ? 1 : 0.5,
+                    scale: 1,
+                    x: -120,
+                    y: 80
+                  }}
+                  exit={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                  transition={{ 
+                    duration: 0.8,
+                    delay: 0.1,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: -360,
+                    }}
+                    transition={{ 
+                      duration: 25,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="relative"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: hoveredIndex !== null ? 1.1 : 1
+                      }}
+                      className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 shadow-xl"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-[#D0D6F9] text-[9px] font-[Barlow_Condensed] uppercase tracking-wider">Travel Time</span>
+                        <span className="text-white text-sm font-[Bellefair]">{activeDestination.travelTime}</span>
+                      </div>
+                    </motion.div>
+                    {/* Connecting line/orbit path */}
+                    <div className={`absolute top-1/2 left-full w-20 h-px bg-gradient-to-r transition-opacity duration-500 ${
+                      hoveredIndex !== null ? 'from-white/40 opacity-100' : 'from-white/20 opacity-50'
+                    } to-transparent`} />
+                  </motion.div>
+                </motion.div>
+
+                {/* Orbital ring effect */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: hoveredIndex !== null ? 0.4 : 0.15,
+                    scale: 1 
+                  }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 border-2 border-white/20 rounded-full pointer-events-none"
+                  style={{
+                    width: '160%',
+                    height: '160%',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                />
               </motion.div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          </div>
         </motion.div>
 
         {/* Navigation Buttons - Bottom Center */}
@@ -200,32 +291,25 @@ export default function Destination() {
                   className="absolute inset-0 bg-white/5 blur-2xl rounded-full -z-10"
                 />
               )}
+
+              {/* "Click to explore" - Appears above each name on hover */}
+              <AnimatePresence>
+                {hoveredIndex === index && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -top-6 md:-top-8 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none"
+                  >
+                    <p className="text-white/60 font-[Barlow_Condensed] text-[10px] md:text-xs uppercase tracking-[0.2em]">
+                      {hoveredIndex === activeIndex ? `Viewing` : `Click to explore`}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
           ))}
-        </motion.div>
-
-        {/* Tap to Explore Hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isVisible && !showModal && hoveredIndex === null ? 1 : 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-6 md:bottom-4"
-        >
-          <p className="text-white/30 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em] animate-pulse">
-            Tap to explore
-          </p>
-        </motion.div>
-
-        {/* Hover Instruction */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: hoveredIndex !== null ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="absolute bottom-8 md:bottom-4"
-        >
-          <p className="text-white/50 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em]">
-            {hoveredIndex === activeIndex ? `Viewing ${hoveredKey}` : `Click to explore ${hoveredKey}`}
-          </p>
         </motion.div>
 
         <Modal showModal={showModal} setShowModal={setShowModal} activeDestination={activeDestination} />
