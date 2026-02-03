@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import Destination from "./pages/Destination";
-// import Crew from "./pages/Crew";
+import Crew from "./pages/Crew";
 // import Technology from "./pages/Technology";
 import Preloader from "./components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
@@ -169,7 +169,7 @@ export default function App() {
             id="crew"
             className="flex-shrink-0 w-screen min-h-screen snap-start"
           >
-            {/* <Crew /> */}
+            <Crew />
           </section>
 
           <section

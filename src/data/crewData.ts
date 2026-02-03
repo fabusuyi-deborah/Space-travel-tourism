@@ -31,3 +31,10 @@ export const crew: CrewMember[] = [
     image: "/images/crew/image-anousheh-ansari.png",
   },
 ];
+
+export const crewStats = [
+  { missions: 3, experience: "12 years", specialty: "Command & Leadership" },
+  { missions: 1, experience: "Space Tourist", specialty: "Entrepreneurship" },
+  { missions: 1, experience: "4 years", specialty: "Piloting & Systems" },
+  { missions: 1, experience: "8 days ISS", specialty: "Engineering & Innovation" }
+];

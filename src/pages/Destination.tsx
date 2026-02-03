@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../index.css"
 import { destinations } from "../data/destinationData";
-import Modal from "../components/Modal";   
+import Modal from "../components/DestinationModal";   
 
 
 export default function Destination() {
@@ -209,7 +209,7 @@ export default function Destination() {
           initial={{ opacity: 0 }}
           animate={{ opacity: isVisible && !showModal && hoveredIndex === null ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-8 md:bottom-4"
+          className="absolute bottom-6 md:bottom-4"
         >
           <p className="text-white/30 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em] animate-pulse">
             Tap to explore
