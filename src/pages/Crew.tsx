@@ -127,8 +127,8 @@ const Crew = () => {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="absolute bottom-6 md:bottom-4"
         >
-          <p className="text-white/30 font-[Barlow_Condensed] text-xs md:text-sm uppercase tracking-[0.2em] animate-pulse">
-            Tap to explore
+          <p className="text-white/40 font-[Barlow_Condensed] text-sm uppercase tracking-[0.2em] ">
+            Click on image to explore
           </p>
         </motion.div>
       </div>
