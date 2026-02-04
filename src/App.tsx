@@ -20,6 +20,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3500);
@@ -48,6 +49,48 @@ export default function App() {
 
     return () => observer.disconnect();
   }, [loading]);
+
+  // Vertical scroll to horizontal navigation
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Prevent default vertical scrolling
+      e.preventDefault();
+
+      // Debounce to prevent over-scrolling
+      if (isScrollingRef.current) return;
+
+      const delta = e.deltaY;
+      const currentSectionIndex = navItems.findIndex(
+        (item) => item.id === activeSection
+      );
+
+      // Determine direction and navigate
+      if (delta > 0 && currentSectionIndex < navItems.length - 1) {
+        // Scroll down = next section
+        isScrollingRef.current = true;
+        handleScroll(navItems[currentSectionIndex + 1].id);
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 1000); // Debounce for 1 second
+      } else if (delta < 0 && currentSectionIndex > 0) {
+        // Scroll up = previous section
+        isScrollingRef.current = true;
+        handleScroll(navItems[currentSectionIndex - 1].id);
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 1000);
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [activeSection]);
 
   const handleScroll = (id: string) => {
     const element = document.getElementById(id);
